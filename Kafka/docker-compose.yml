@@ -1,4 +1,4 @@
-version: '2'
+version: '3'
 
 services:
 
@@ -9,7 +9,6 @@ services:
     image: wurstmeister/zookeeper:3.4.6
     ports:
       - "2181:2181"
-
   # wurstmeister/kafka:2.13-2.8.1 - broker 1
   kafka1:
     hostname: kafka1
@@ -18,9 +17,13 @@ services:
     environment:
       KAFKA_BROKER_ID: 1
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://192.168.1.100:9092
+      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092
       KAFKA_ADVERTISED_HOST_NAME: kafka1
+      KAFKA_ADVERTISED_PORT: 9092
+      KAFKA_CREATE_TOPICS: "Sample:3:3"
       BOOTSTRAP_SERVERS: kafka1:9092, kafka2:9093, kafka3:9094
-      KAFKA_CREATE_TOPICS: "test1:1:1"
+      #KAFKA_CREATE_TOPICS: "Sample:1:1"
     ports:
       - "9092:9092"
     depends_on:
@@ -34,11 +37,14 @@ services:
     environment:
       KAFKA_BROKER_ID: 2
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://192.168.1.100:9093
+      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9093
       KAFKA_ADVERTISED_HOST_NAME: kafka2
+      KAFKA_ADVERTISED_PORT: 9093
+      KAFKA_CREATE_TOPICS: "Sample:3:3"
       BOOTSTRAP_SERVERS: kafka1:9092, kafka2:9093, kafka3:9094
-      KAFKA_CREATE_TOPICS: "test2:1:1"
     ports:
-      - "9093:9092"
+      - "9093:9093"
     depends_on:
       - zookeeper
 
@@ -50,14 +56,16 @@ services:
     environment:
       KAFKA_BROKER_ID: 3
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://192.168.1.100:9094
+      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9094
       KAFKA_ADVERTISED_HOST_NAME: kafka3
+      KAFKA_ADVERTISED_PORT: 9094
+      KAFKA_CREATE_TOPICS: "Sample:3:3"
       BOOTSTRAP_SERVERS: kafka1:9092, kafka2:9093, kafka3:9094
-      KAFKA_CREATE_TOPICS: "test3:1:1"
     ports:
-      - "9094:9092"
+      - "9094:9094"
     depends_on:
       - zookeeper
-
   # obsidiandynamics/kafdrop
   kafdrop:
     hostname: kafdrop
@@ -67,7 +75,7 @@ services:
     ports:
       - "9000:9000"
     environment:
-      KAFKA_BROKERCONNECT: "kafka1:9092, kafka2:9092, kafka3:9092"
+      KAFKA_BROKERCONNECT: "kafka1:9092, kafka2:9093, kafka3:9094"
       JVM_OPTS: "-Xms32M -Xmx64M"
     depends_on:
       - zookeeper
