@@ -10,19 +10,19 @@ services:
     ports:
       - "2181:2181"
   # wurstmeister/kafka:2.13-2.8.1 - broker 1
-  kafka1:
-    hostname: kafka1
-    container_name: kafka1
+  kafka-1:
+    hostname: kafka-1
+    container_name: kafka-1
     image: wurstmeister/kafka:2.13-2.8.1
     environment:
       KAFKA_BROKER_ID: 1
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
       KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://192.168.1.100:9092
       KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092
-      KAFKA_ADVERTISED_HOST_NAME: kafka1
+      KAFKA_ADVERTISED_HOST_NAME: kafka-1
       KAFKA_ADVERTISED_PORT: 9092
       KAFKA_CREATE_TOPICS: "Sample:3:3"
-      BOOTSTRAP_SERVERS: kafka1:9092, kafka2:9093, kafka3:9094
+      BOOTSTRAP_SERVERS: kafka-1:9092, kafka-2:9093, kafka-3:9094
       #KAFKA_CREATE_TOPICS: "Sample:1:1"
     ports:
       - "9092:9092"
@@ -30,9 +30,9 @@ services:
       - zookeeper
 
   # wurstmeister/kafka:2.13-2.8.1 - broker 2
-  kafka2:
-    hostname: kafka2
-    container_name: kafka2
+  kafka-2:
+    hostname: kafka-2
+    container_name: kafka-2
     image: wurstmeister/kafka:2.13-2.8.1
     environment:
       KAFKA_BROKER_ID: 2
@@ -42,26 +42,26 @@ services:
       KAFKA_ADVERTISED_HOST_NAME: kafka2
       KAFKA_ADVERTISED_PORT: 9093
       KAFKA_CREATE_TOPICS: "Sample:3:3"
-      BOOTSTRAP_SERVERS: kafka1:9092, kafka2:9093, kafka3:9094
+      BOOTSTRAP_SERVERS: kafka-1:9092, kafka-2:9093, kafka-3:9094
     ports:
       - "9093:9093"
     depends_on:
       - zookeeper
 
   # wurstmeister/kafka:2.13-2.8.1 - broker 3
-  kafka3:
-    hostname: kafka3
-    container_name: kafka3
+  kafka-3:
+    hostname: kafka-3
+    container_name: kafka-3
     image: wurstmeister/kafka:2.13-2.8.1
     environment:
       KAFKA_BROKER_ID: 3
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
       KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://192.168.1.100:9094
       KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9094
-      KAFKA_ADVERTISED_HOST_NAME: kafka3
+      KAFKA_ADVERTISED_HOST_NAME: kafka-3
       KAFKA_ADVERTISED_PORT: 9094
       KAFKA_CREATE_TOPICS: "Sample:3:3"
-      BOOTSTRAP_SERVERS: kafka1:9092, kafka2:9093, kafka3:9094
+      BOOTSTRAP_SERVERS: kafka-1:9092, kafka-2:9093, kafka-3:9094
     ports:
       - "9094:9094"
     depends_on:
@@ -79,6 +79,18 @@ services:
       JVM_OPTS: "-Xms32M -Xmx64M"
     depends_on:
       - zookeeper
-      - kafka1
-      - kafka2
-      - kafka3
+      - kafka-1
+      - kafka-2
+      - kafka-3
+
+  zookeeper-navigator:
+    hostname: zookeeper-navigator
+    container_name: zookeeper-navigator
+    image: elkozmon/zoonavigator:1.1.2
+    restart: always
+    ports:
+      - 9100:9100
+    environment:
+      HTTP_PORT: 9100
+    depends_on:
+      - zookeeper
