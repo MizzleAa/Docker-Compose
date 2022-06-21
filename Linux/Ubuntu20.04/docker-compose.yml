@@ -1,0 +1,8 @@
+version: '3'
+
+services:
+  hadoop:
+    build: 
+      context: ./ubuntu
+      dockerfile: ./Dockerfile
+    restart: always
