@@ -1,0 +1,7 @@
+apt-get update 
+
+apt-get install wget 
+apt-get install nano
+
+apt-get clean
+apt-get install update

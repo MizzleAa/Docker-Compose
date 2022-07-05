@@ -1,0 +1,10 @@
+version: '3'
+
+services:
+  hadoop-3:
+    build: 
+      context: ./3
+      dockerfile: ./Dockerfile
+    container_name: hadoop-3
+    environment:
+      - TZ=Asia/Seoul
