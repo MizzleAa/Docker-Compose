@@ -115,9 +115,9 @@ hdfs dfsadmin -report
 ##########################
 #SPARK
 
-wget https://dlcdn.apache.org/spark/spark-3.1.2/spark-3.1.2-bin-without-hadoop.tgz
-tar xvzf spark-3.1.2-bin-without-hadoop.tgz
-mv spark-3.1.2-bin-without-hadoop spark
+wget https://dlcdn.apache.org/spark/spark-3.2.1/spark-3.2.1-bin-without-hadoop.tgz
+tar xvzf spark-3.2.1-bin-without-hadoop.tgz
+mv spark-3.2.1-bin-without-hadoop spark
 
 #python
 apt-get install python3-pip -y
@@ -143,11 +143,21 @@ vim spark-env.sh
 export JAVA_HOME=/root/java
 export HADOOP_CONF_DIR=/root/hadoop/etc/hadoop
 export YARN_CONF_DIR=/root/hadoop/etc/hadoop
-export SPARK_DIST_CLASSPATH=/root/hadoop/bin/hadoop
+export SPARK_DIST_CLASSPATH=$(/root/hadoop/bin/hadoop classpath)
 
 cp workers.template workers
 cp spark-defaults.conf.template spark-defaults.conf
 vim spark-defaults.conf
+
+spark.master yarn
+
+####################하둡 실행
+service ssh start
+
+start-all.sh
+
+#######spark 실행
+spark/bin/spark-shell
 
 ####################
 docker ps
@@ -156,7 +166,3 @@ docker commit hadoop_sample hadoop:20220705
 docker images
 docker run -it -p 9870:9870 -p 9000:9000 -p 4040:4040 -p 8088:8088 --name hadoop_final hadoop:20220705
 
-####################하둡 실행
-service ssh start
-
-start-all.sh
