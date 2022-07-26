@@ -1,0 +1,54 @@
+cd hadoop
+
+FS(File System) shell
+
+#하둡 디렉토리 목록 조회
+hadoop fs -ls /
+
+#하둡 디렉토리 생성
+hadoop fs -mkdir /user
+
+#명령어는 항상 하둡 최상단 경로에 지정되어야 한다
+bin/hdfs dfs -mkdir /hdfs-user
+bin/hdfs dfs -ls /
+
+#touch : 파일 생성
+bin/hdfs dfs -ls /hdfs-user
+bin/hdfs dfs -touchz /hdfs-user/test.txt
+bin/hdfs dfs -ls -R /hdfs-user
+
+hadoop fs -touchz /user/hadoop-test.txt
+hadoop fs -ls -R /user
+
+#put : 외부 파일을 hadoop으로 복사
+hadoop fs -mkdir /user/etc
+hadoop fs -ls
+hadoop fs -put /copyFile/ user/etc
+
+#cat : 파일 보기
+hadoop fs -cat /user/etc/copyFile/copytext.txt
+
+#copyFromLocal : 파일 복사
+hadoop fs -copyFromLocal /copyFile/ /user/etc/copyFile
+
+#get : hadoop에 있는 파일을 로컬로 복사하는 
+hadoop fs -get /user/etc/copyFile/copyFile /tmp
+cd /tmp
+ls
+
+#mv
+hadoop fs -mv /user/etc/copyFile/copytext.txt /user/etc/
+hadoop fs -ls /user/etc
+
+#cp
+hadoop fs -cp /user/etc/copytext.txt /user/
+hadoop fs -ls /user
+
+#rm
+#directory
+hadoop fs -rm -r /user/etc/copyFile
+
+#File
+haddop fs -rm /user/etc/copytext.txt
+
+#chmod
